@@ -2,7 +2,7 @@ const nomeEmpresa = "Sistema Omma";
 
 console.log(nomeEmpresa);
 
-const receitas = [{
+const listaDeReceitas = [{
   id: 1,
   titulo: "Cachorro quente",
   dificuldade: "simples",
@@ -22,35 +22,53 @@ const cadastrarReceita = (id, titulo, dificuldade, ingredientes, preparo, link, 
     link,
     vegano,
   }
-  receitas.push(novaReceita);
+  listaDeReceitas.push(novaReceita);
   console.log("o cadastro foi concluído");
 }
 
 const exibirReceitas = () => {
-  receitas.map((receita) => console.log(`\nTítulo: ${receita.titulo} \nIngredientes: ${receita.ingredientes.map((ingrediente) => "\n- "+ingrediente)}\nVegana? ${receita.vegano}\n`));
+  listaDeReceitas.forEach((receita) => console.log(`\nTítulo: ${receita.titulo} \nIngredientes: ${receita.ingredientes.map((ingrediente) => "\n- "+ingrediente)}\nVegana? ${receita.vegano? "sim" : "não"}\n`));
 }
 
 const deletarReceita = (id) => {
 
-  const testarID = receitas.find((receita) => receita.id === id);
+  const indice = listaDeReceitas.findIndex((receita) => receita.id === id);
 
-  if(!testarID) return console.log("Receita não encontrada");
+  if (indice === -1) {
+    return console.log("Receita não encontrada");
+  }
 
-  receitas.forEach((receita,idx) => {
-    if(receita.id == id) {
-      receitas.splice(idx);
-      return console.log("Receita deletada com sucesso");
-    };
+  listaDeReceitas.splice(indice);
+  return console.log("Receita deletada com sucesso");
+
+};
+
+//aDIÇÃO DA SEGUNDA RECEITA
+cadastrarReceita(2, "Ovo frito", "simples", ["1 ovo", "1/2 garrafa de óleo", "sal a gosto"], "esquente o óleo, quebre o ovo e coloque seu conteúdo cuidadosamente sobre o óleo. Retire com uma escumadeira quando estiver com a textura de sua preferência", "http://youtube.com", true);
+
+
+const buscarReceita = (termo) => {
+  const resultado = listaDeReceitas.filter((receita) => {
+    return receita.titulo.toLowerCase().indexOf(termo) != -1;
   });
+
+  console.log("\nEstes são os resultados da sua busca:");
+
+  resultado.forEach((listaDeReceitas) => console.log(`\nTítulo: ${listaDeReceitas.titulo} \nIngredientes: ${listaDeReceitas.ingredientes.map((ingrediente) => "\n- "+ingrediente)}\nVegana? ${listaDeReceitas.vegano? "sim" : "não"}\n`));
 }
 
 
-cadastrarReceita(2,"Ovo frito","simples",["1 ovo","1/2 garrafa de óleo", "sal a gosto"],"esquente o óleo, quebre o ovo e coloque seu conteúdo cuidadosamente sobre o óleo. Retire com uma escumadeira quando estiver com a textura de sua preferência","http://youtube.com", true);
+const atualizarReceita = (id,prop,alteracao) => {
+  const indice = listaDeReceitas.findIndex((receita) => receita.id === id);
 
-exibirReceitas();
+  if (indice === -1) {
+    return console.log(`Identificador ${id} não encontrado`);
+  }
 
-deletarReceita(2);
-
-exibirReceitas();
-
-deletarReceita(3);
+  if(listaDeReceitas[indice][prop]){
+    listaDeReceitas[indice][prop] = alteracao;
+    return console.log("Receita alterada com sucesso!");
+  }
+  return console.log(`categoria ${prop} não encontrada na receita de id ${id}`);
+  
+};
